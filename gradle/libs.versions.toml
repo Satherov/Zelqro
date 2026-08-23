@@ -1,0 +1,13 @@
+[versions]
+google_errorprone = "2.50.0"
+jspecify = "1.0.0"
+jetbrains_annotations = "26.1.0"
+lombok = "9.5.0"
+
+[libraries]
+google_errorprone = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "google_errorprone" }
+jspecify = { group = "org.jspecify", name = "jspecify", version.ref = "jspecify" }
+jetbrains_annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains_annotations" }
+
+[plugins]
+lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
