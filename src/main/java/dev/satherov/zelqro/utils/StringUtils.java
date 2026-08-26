@@ -181,8 +181,10 @@ public class StringUtils {
     ///
     public static String toSnakeCase(String... words) {
         StringBuilder builder = new StringBuilder();
-        for (String word : words) {
-            builder.append(StringUtils.lower(word.trim())).append("_");
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            builder.append(StringUtils.lower(word.trim()));
+            if (i < words.length - 1) builder.append("_");
         }
         return builder.toString();
     }
@@ -221,8 +223,10 @@ public class StringUtils {
     ///
     public static String toKebabCase(String... words) {
         StringBuilder builder = new StringBuilder();
-        for (String word : words) {
-            builder.append(StringUtils.lower(word.trim())).append("-");
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            builder.append(StringUtils.lower(word.trim()));
+            if (i < words.length - 1) builder.append("-");
         }
         return builder.toString();
     }
@@ -261,8 +265,10 @@ public class StringUtils {
     ///
     public static String toTrainCase(String... words) {
         StringBuilder builder = new StringBuilder();
-        for (String word : words) {
-            builder.append(StringUtils.capitalize(word.trim())).append("-");
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            builder.append(StringUtils.capitalize(word.trim()));
+            if (i < words.length - 1) builder.append("-");
         }
         return builder.toString();
     }
@@ -301,8 +307,10 @@ public class StringUtils {
     ///
     public static String toTitleCase(String... words) {
         StringBuilder builder = new StringBuilder();
-        for (String word : words) {
-            builder.append(StringUtils.capitalize(word.trim())).append(" ");
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            builder.append(StringUtils.capitalize(word.trim()));
+            if (i < words.length - 1) builder.append(" ");
         }
         return builder.toString();
     }
