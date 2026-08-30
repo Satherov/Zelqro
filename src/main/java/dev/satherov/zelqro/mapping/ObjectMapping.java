@@ -388,6 +388,10 @@ public class ObjectMapping {
     /// @return The mapped value, or `null` if the `value` is not an instance of the `type`.
     ///
     /// @see #mapNonNullIfInstanceOf(Object, Class, Function)
+    /// @see #mapIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapNonNullIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
+    /// @see #mapNonNullIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
     ///
     public static <T, R> @Nullable R mapIfInstanceOf(@Nullable Object value, Class<T> type, Function<? super T, ? extends @Nullable R> mapper) {
         return type.isInstance(value) ? mapper.apply(type.cast(value)) : null;
@@ -406,9 +410,116 @@ public class ObjectMapping {
     ///
     /// @throws NullPointerException If the mapper function returns `null`.
     /// @see #mapIfInstanceOf(Object, Class, Function)
+    /// @see #mapIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapNonNullIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
+    /// @see #mapNonNullIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
     ///
     public static <T, R> @Nullable R mapNonNullIfInstanceOf(@Nullable Object value, Class<T> type, Function<? super T, ? extends R> mapper) {
         return type.isInstance(value) ? Objects.requireNonNull(mapper.apply(type.cast(value)), "Mapper function must not return null") : null;
+    }
+    
+    ///
+    /// Maps the given value to a new value using the given mapper function if the value is an instance of the given type.
+    /// If the `value` is not an instance of the `type`, the `orElse` value is returned.
+    ///
+    /// The mapper function and the `orElse` value may be `null`.
+    ///
+    /// @param value  The value to map.
+    /// @param type   The type to check against.
+    /// @param mapper The mapper function.
+    /// @param orElse The value to return if the `value` is not an instance of the `type`.
+    ///
+    /// @return The mapped value, or `orElse` if the `value` is not an instance of the `type`.
+    ///
+    /// @see #mapIfInstanceOf(Object, Class, Function)
+    /// @see #mapNonNullIfInstanceOf(Object, Class, Function)
+    /// @see #mapNonNullIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
+    /// @see #mapNonNullIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
+    ///
+    public static <T, R> @Nullable R mapIfInstanceOfOrElse(@Nullable Object value, Class<T> type, Function<? super T, ? extends @Nullable R> mapper, @Nullable R orElse) {
+        return type.isInstance(value) ? mapper.apply(type.cast(value)) : orElse;
+    }
+    
+    ///
+    /// Maps the given value to a new value using the given mapper function if the value is an instance of the given type.
+    /// If the `value` is not an instance of the `type`, the `orElse` value is returned.
+    ///
+    /// Both the mapper function and the `orElse` value must not return `null`.
+    ///
+    /// @param value  The value to map.
+    /// @param type   The type to check against.
+    /// @param mapper The mapper function.
+    /// @param orElse The value to return if the `value` is not an instance of the `type`.
+    ///
+    /// @return The mapped value, or `orElse` if the `value` is not an instance of the `type`.
+    ///
+    /// @throws NullPointerException If the mapper function or the `orElse` value is `null`.
+    /// @see #mapIfInstanceOf(Object, Class, Function)
+    /// @see #mapNonNullIfInstanceOf(Object, Class, Function)
+    /// @see #mapIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
+    /// @see #mapNonNullIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
+    ///
+    public static <T, R> R mapNonNullIfInstanceOfOrElse(@Nullable Object value, Class<T> type, Function<? super T, ? extends R> mapper, R orElse) {
+        return type.isInstance(value) ?
+                Objects.requireNonNull(mapper.apply(type.cast(value)), "Mapper function must not return null") :
+                Objects.requireNonNull(orElse);
+    }
+    
+    ///
+    /// Maps the given value to a new value using the given mapper function if the value is an instance of the given type.
+    /// If the `value` is not an instance of the `type`, the `orElse` supplier's value is returned.
+    ///
+    /// The mapper function and the `orElse` supplier may be `null`.
+    ///
+    /// @param value  The value to map.
+    /// @param type   The type to check against.
+    /// @param mapper The mapper function.
+    /// @param orElse The supplier of the value to return if the `value` is not an instance of the `type`.
+    ///
+    /// @return The mapped value, or the value returned by the `orElse` supplier if the `value` is not an instance of the `type`.
+    ///
+    /// @see #mapIfInstanceOf(Object, Class, Function)
+    /// @see #mapNonNullIfInstanceOf(Object, Class, Function)
+    /// @see #mapIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapNonNullIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapNonNullIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
+    ///
+    public static <T, R> @Nullable R mapIfInstanceOfOrElseGet(
+            @Nullable Object value,
+            Class<T> type,
+            Function<? super T, ? extends @Nullable R> mapper,
+            Supplier<@Nullable R> orElse
+    ) {
+        return type.isInstance(value) ? mapper.apply(type.cast(value)) : orElse.get();
+    }
+    
+    ///
+    /// Maps the given value to a new value using the given mapper function if the value is an instance of the given type.
+    /// If the `value` is not an instance of the `type`, the `orElse` supplier's value is returned.
+    ///
+    /// Both the mapper function and the `orElse` supplier must not return `null`.
+    ///
+    /// @param value  The value to map.
+    /// @param type   The type to check against.
+    /// @param mapper The mapper function.
+    /// @param orElse The supplier of the value to return if the `value` is not an instance of the `type`.
+    ///
+    /// @return The mapped value, or the value returned by the `orElse` supplier if the `value` is not an instance of the `type`.
+    ///
+    /// @throws NullPointerException If the mapper function or the `orElse` supplier returns `null`.
+    /// @see #mapIfInstanceOf(Object, Class, Function)
+    /// @see #mapNonNullIfInstanceOf(Object, Class, Function)
+    /// @see #mapIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapNonNullIfInstanceOfOrElse(Object, Class, Function, Object)
+    /// @see #mapIfInstanceOfOrElseGet(Object, Class, Function, Supplier)
+    ///
+    public static <T, R> R mapNonNullIfInstanceOfOrElseGet(@Nullable Object value, Class<T> type, Function<? super T, ? extends R> mapper, Supplier<R> orElse) {
+        return type.isInstance(value) ?
+                Objects.requireNonNull(mapper.apply(type.cast(value)), "Mapper function must not return null") :
+                Objects.requireNonNull(orElse.get());
     }
     
     // ========== PRIMITIVE ==========
